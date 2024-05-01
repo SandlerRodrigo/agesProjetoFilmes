@@ -12,22 +12,45 @@
 
 // app.listen(3004, () => "Servidor rodando no port 3004");
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
-// console.log("DATABASE_URL", process.env.DATABASE_URL)
-
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 async function main() {
-  const allUsers = await prisma.user.findMany()
-  console.log(allUsers)
+  const review = await prisma.review.create({
+    data: {
+      rating: 5,
+      comment: "Boo is so cute!",
+      movie: {
+        create: {
+          title: "Monster, Inc.",
+          description: "screaming children",
+        },
+      },
+      user: {
+        create: {
+          name: "Rodrigo Sandler",
+          email: "rodrigo@sandler",
+        },
+      },
+    },
+  });
+
+  console.log(
+    await prisma.review.findMany({
+      include: {
+        movie: true,
+        user: true,
+      },
+    })
+  );
 }
 
 main()
   .catch(async (e) => {
-    console.error(e)
-    process.exit(1)
+    console.error(e);
+    process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect()
-  })
+    await prisma.$disconnect();
+  });
