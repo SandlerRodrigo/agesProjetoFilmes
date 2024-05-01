@@ -1,49 +1,40 @@
-// import express from "express";
+import express from "express";
 
-// import { Request, Response } from "express";
-
-// const app = express();
-
-// app.use(express.json());
-
-// app.get("/", (req: Request, res: Response) => {
-//   res.json({ message: "D9D9D9" });
-// });
-
-// app.listen(3004, () => "Servidor rodando no port 3004");
+import { Request, Response } from "express";
 
 import { PrismaClient } from "@prisma/client";
 
+const app = express();
+
 const prisma = new PrismaClient();
 
-async function main() {
-  const review = await prisma.review.create({
-    data: {
-      rating: 5,
-      comment: "Boo is so cute!",
-      movie: {
-        create: {
-          title: "Monster, Inc.",
-          description: "screaming children",
-        },
-      },
-      user: {
-        create: {
-          name: "Rodrigo Sandler",
-          email: "rodrigo@sandler",
-        },
-      },
-    },
-  });
+app.use(express.json());
 
-  console.log(
-    await prisma.review.findMany({
-      include: {
-        movie: true,
-        user: true,
-      },
-    })
-  );
+app.use("/", require("./routes/reviewsRoutes"));
+
+app.listen(3004, () => "Servidor rodando no port 3004");
+
+async function main() {
+  // const review = await prisma.review.create({
+  //   data: {
+  //     rating: 5,
+  //     comment: "Boo is so cute!",
+  //     movie: {
+  //       create: {
+  //         title: "Monster, Inc.",
+  //         description: "screaming children",
+  //       },
+  //     },
+  //     user: {
+  //       create: {
+  //         name: "Rodrigo Sandler",
+  //         email: "rodrigo@sandler",
+  //       },
+  //     },
+  //   },
+  // });
+
+  // console.log(review);
 }
 
 main()
