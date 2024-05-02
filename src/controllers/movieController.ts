@@ -25,7 +25,24 @@ export const getMovieById = async (req: Request, res: Response) => {
             res.status(200).json(movie);
             return
         }
-        res.json(movie);
+        res.status(200).json(movie);
+    } catch (error) {
+        res.status(500).json({ error: "Erro Interno de Servidor" });
+    }
+}
+
+export const getMovieReviews = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const movie = await prisma.movie.findUnique({
+            where: {
+                id: id,
+            },
+            include: {
+                review : true,
+            },
+        });
+        res.status(200).json(movie);
     } catch (error) {
         res.status(500).json({ error: "Erro Interno de Servidor" });
     }
@@ -40,7 +57,7 @@ export const createMovie = async (req: Request, res: Response) => {
                 description,
             },
         });
-        res.status(201).json(movie);
+        res.status(202).json(movie);
     } catch (error) {
         res.status(500).json({ error: "Erro Interno de Servidor" });
     }
@@ -59,7 +76,7 @@ export const updateMovie = async (req: Request, res: Response) => {
                 description,
             },
         });
-        res.json(movie);
+        res.status(203).json(movie);
     } catch (error) {
         res.status(500).json({ error: "Erro Interno de Servidor" });
     }

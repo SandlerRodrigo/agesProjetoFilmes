@@ -7,12 +7,12 @@ export const getReviews = async (req: Request, res: Response) => {
   try {
     const reviews = await prisma.review.findMany({
       include: {
-        movie: true,
-        user: true,
+        Movie: true,
+        User: true,
       },
     });
 
-    res.json(reviews);
+    res.status(200).json(reviews);
   } catch (error) {
     res
       .status(500)
@@ -29,12 +29,12 @@ export const getReviewsById = async (req: Request, res: Response) => {
         id: id,
       },
       include: {
-        movie: true,
-        user: true,
+        Movie: true,
+        User: true,
       },
     });
 
-    res.json(review);
+    res.status(200).json(review);
   } catch (error) {
     res
       .status(500)
@@ -55,7 +55,7 @@ export const createReview = async (req: Request, res: Response) => {
       },
     });
 
-    res.json(review);
+    res.status(202).json(review);
   } catch (error) {
     res
       .status(500)
@@ -78,7 +78,7 @@ export const updateReview = async (req: Request, res: Response) => {
       },
     });
 
-    res.json(review);
+    res.status(203).json(review);
   } catch (error) {
     res
       .status(500)
@@ -96,7 +96,7 @@ export const deleteReview = async (req: Request, res: Response) => {
       },
     });
 
-    res.json({ message: "Review deletado com sucesso!" });
+    res.status(204).json({ message: "Review deletado com sucesso!" });
   } catch (error) {
     res
       .status(500)
