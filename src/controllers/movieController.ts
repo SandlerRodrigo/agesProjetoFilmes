@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
-
 import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
+import { CreateMovieDto } from "../dto/movies/createMovie.dto";
+import { UpdateMovieDto } from "../dto/movies/updateMovie.dto";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +10,7 @@ export const getMovies = async (req: Request, res: Response) => {
     const movies = await prisma.movie.findMany();
     res.status(200).json(movies);
   } catch (error) {
-    res.status(500).json({ error: "Filme não encontrado!" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -22,12 +23,12 @@ export const getMovieById = async (req: Request, res: Response) => {
       },
     });
     if (!movie) {
-      res.status(200).json(movie);
+      res.status(404).json({ error: "Movie not found" });
       return;
     }
     res.status(200).json(movie);
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -42,43 +43,37 @@ export const getMovieReviews = async (req: Request, res: Response) => {
         review: true,
       },
     });
-    res.status(200).json(movie);
+    res.status(200).json({ movie: movie });
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const createMovie = async (req: Request, res: Response) => {
-  const { title, description } = req.body;
+  const data: CreateMovieDto = req.body;
   try {
     const movie = await prisma.movie.create({
-      data: {
-        title,
-        description,
-      },
+      data,
     });
-    res.status(202).json(movie);
+    res.status(201).json(movie);
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const updateMovie = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { title, description } = req.body;
+  const data: UpdateMovieDto = req.body;
   try {
     const movie = await prisma.movie.update({
       where: {
         id: id,
       },
-      data: {
-        title,
-        description,
-      },
+      data,
     });
-    res.status(203).json(movie);
+    res.status(200).json(movie);
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -92,6 +87,6 @@ export const deleteMovie = async (req: Request, res: Response) => {
     });
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

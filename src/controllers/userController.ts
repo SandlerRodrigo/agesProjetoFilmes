@@ -1,5 +1,7 @@
-import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
+import { Request, Response } from "express";
+import { CreateUserDto } from "../dto/users/createUser.dto";
+import { UpdateUserDto } from "../dto/users/updateUser.dto";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +10,7 @@ export const getUsers = async (req: Request, res: Response) => {
     const users = await prisma.user.findMany();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: "Usuário não encontrado!" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -21,59 +23,53 @@ export const getUserById = async (req: Request, res: Response) => {
       },
     });
     if (!user) {
-      res.status(200).json(user);
+      res.status(404).json({ error: "User not found" });
       return;
     }
-    res.json(user);
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const { name, email } = req.body;
+  const data: CreateUserDto = req.body;
   try {
     const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-      },
+      data,
     });
     res.status(201).json(user);
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { name, email } = req.body;
+  const data: UpdateUserDto = req.body;
   try {
     const user = await prisma.user.update({
       where: {
         id: id,
       },
-      data: {
-        name,
-        email,
-      },
+      data,
     });
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
 export const deleteUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const user = await prisma.user.delete({
+    await prisma.user.delete({
       where: {
         id: id,
       },
     });
-    res.status(200).json(user);
+    res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: "Erro Interno de Servidor" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
