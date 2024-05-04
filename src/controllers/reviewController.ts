@@ -43,10 +43,10 @@ export const getReviewsById = async (req: Request, res: Response) => {
 };
 
 export const createReview = async (req: Request, res: Response) => {
-  const data: CreateReviewDto = req.body;
+  const dto: CreateReviewDto = req.body;
   try {
     const review = await prisma.review.create({
-      data,
+      data: dto,
     });
     res.status(201).json(review);
   } catch (error) {
@@ -56,13 +56,13 @@ export const createReview = async (req: Request, res: Response) => {
 
 export const updateReview = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data: UpdateReviewDto = req.body;
+  const dto: UpdateReviewDto = req.body;
   try {
     const review = await prisma.review.update({
       where: {
         id: id,
       },
-      data,
+      data: dto,
     });
     res.status(200).json(review);
   } catch (error) {

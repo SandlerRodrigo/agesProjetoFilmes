@@ -33,10 +33,10 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const createUser = async (req: Request, res: Response) => {
-  const data: CreateUserDto = req.body;
+  const dto: CreateUserDto = req.body;
   try {
     const user = await prisma.user.create({
-      data,
+      data: dto,
     });
     res.status(201).json(user);
   } catch (error) {
@@ -46,13 +46,13 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data: UpdateUserDto = req.body;
+  const dto: UpdateUserDto = req.body;
   try {
     const user = await prisma.user.update({
       where: {
         id: id,
       },
-      data,
+      data: dto,
     });
     res.status(200).json(user);
   } catch (error) {

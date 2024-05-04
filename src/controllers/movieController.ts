@@ -50,10 +50,10 @@ export const getMovieReviews = async (req: Request, res: Response) => {
 };
 
 export const createMovie = async (req: Request, res: Response) => {
-  const data: CreateMovieDto = req.body;
+  const dto: CreateMovieDto = req.body;
   try {
     const movie = await prisma.movie.create({
-      data,
+      data: dto,
     });
     res.status(201).json(movie);
   } catch (error) {
@@ -63,13 +63,13 @@ export const createMovie = async (req: Request, res: Response) => {
 
 export const updateMovie = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const data: UpdateMovieDto = req.body;
+  const dto: UpdateMovieDto = req.body;
   try {
     const movie = await prisma.movie.update({
       where: {
         id: id,
       },
-      data,
+      data: dto,
     });
     res.status(200).json(movie);
   } catch (error) {
