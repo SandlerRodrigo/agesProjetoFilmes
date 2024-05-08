@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: #1f1f1f;
+    height: 100px;
+    width: 80%;
+    margin: 5% auto 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.header img {
+    height: 50%;
+    width: auto;
+}
+
+.header input {
+    width: 50%;
+    height: 50%;
+    border: none;
+    border-radius: 5px;
+    padding: 0 10px;
+    font-size: 1.2em;
+}
