@@ -49,6 +49,27 @@ export const getMovieReviews = async (req: Request, res: Response) => {
   }
 };
 
+export const getMovieReviewsByTitle = async (req: Request, res: Response) => {
+  const { title } = req.params;
+  try {
+    const movie = await prisma.movie.findFirst({
+      where: {
+        title: title,
+      },
+      include: {
+        review: true,
+      },
+    });
+    if (!movie) {
+      res.status(404).json({ error: "Movie not found" });
+      return;
+    }
+    res.status(200).json({ movie: movie });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
 export const createMovie = async (req: Request, res: Response) => {
   const dto: CreateMovieDto = req.body;
   try {
